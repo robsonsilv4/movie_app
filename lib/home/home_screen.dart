@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'movie_model.dart';
 import 'movie_service.dart';
+import 'movies_exceptions.dart';
 
 final moviesFutureProvider = FutureProvider.autoDispose<List<MovieModel>>(
   (ref) async {
@@ -40,7 +41,12 @@ class HomeScreen extends ConsumerWidget {
         loading: () => Center(
           child: CircularProgressIndicator(),
         ),
-        error: (error, stackTrace) => Text('error'),
+        error: (error, stackTrace) {
+          if (error is MoviesException) {
+            return _ErrorBody(message: error.message);
+          }
+          return _ErrorBody(message: 'Ooops, something unexpected happended.');
+        },
       ),
     );
   }
@@ -98,6 +104,32 @@ class _FrontBanner extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ErrorBody extends StatelessWidget {
+  const _ErrorBody({
+    Key key,
+    @required this.message,
+  })  : assert(message != null, 'A non-null String must be provided'),
+        super(key: key);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(message),
+          RaisedButton(
+            onPressed: () => context.refresh(moviesFutureProvider),
+            child: Text("Try again!"),
+          ),
+        ],
       ),
     );
   }
