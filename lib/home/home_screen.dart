@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,6 +19,11 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        title: Text('Movie App'),
+      ),
       body: watch(moviesFutureProvider).when(
         data: (movies) {
           return RefreshIndicator(
@@ -26,7 +33,7 @@ class HomeScreen extends ConsumerWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               childAspectRatio: 0.7,
-              children: movies.map((movie) => Text(movie.title)).toList(),
+              children: movies.map((movie) => _MovieBox(movie: movie)).toList(),
             ),
           );
         },
@@ -34,6 +41,63 @@ class HomeScreen extends ConsumerWidget {
           child: CircularProgressIndicator(),
         ),
         error: (error, stackTrace) => Text('error'),
+      ),
+    );
+  }
+}
+
+class _MovieBox extends StatelessWidget {
+  final MovieModel movie;
+
+  const _MovieBox({Key key, this.movie}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Image.network(
+          movie.fullImageUrl,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: _FrontBanner(text: movie.title),
+        ),
+      ],
+    );
+  }
+}
+
+class _FrontBanner extends StatelessWidget {
+  final String text;
+
+  const _FrontBanner({
+    Key key,
+    @required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 10.0,
+          sigmaY: 10.0,
+        ),
+        child: Container(
+          color: Colors.grey.shade200.withOpacity(0.5),
+          height: 60.0,
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+          ),
+        ),
       ),
     );
   }
