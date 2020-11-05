@@ -19,12 +19,15 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       body: watch(moviesFutureProvider).when(
         data: (movies) {
-          return GridView.extent(
-            maxCrossAxisExtent: 200,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.7,
-            children: movies.map((movie) => Text(movie.title)).toList(),
+          return RefreshIndicator(
+            onRefresh: () => context.refresh(moviesFutureProvider),
+            child: GridView.extent(
+              maxCrossAxisExtent: 200,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.7,
+              children: movies.map((movie) => Text(movie.title)).toList(),
+            ),
           );
         },
         loading: () => Center(
