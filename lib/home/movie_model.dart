@@ -23,7 +23,7 @@ class MovieModel {
 
     return MovieModel(
       title: map['title'],
-      posterPath: map['posterPath'],
+      posterPath: map['poster_path'],
     );
   }
 
