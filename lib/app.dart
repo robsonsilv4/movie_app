@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'home/home_screen.dart';
+
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,7 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
-        body: Container(),
+        body: HomeScreen(),
       ),
     );
   }
