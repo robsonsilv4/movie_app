@@ -22,8 +22,9 @@ class MovieService {
 
     final results = List<Map<String, dynamic>>.from(response.data['results']);
 
-    List<MovieModel> movies =
-        results.map((movie) => MovieModel.fromMap(movie)).toList();
+    List<MovieModel> movies = results
+        .map((movie) => MovieModel.fromMap(movie))
+        .toList(growable: false);
     return movies;
   }
 }
