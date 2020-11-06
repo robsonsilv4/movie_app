@@ -16,10 +16,10 @@ class MovieService {
 
   MovieService(this._environment, this._dio);
 
-  Future<List<MovieModel>> getMovies() async {
+  Future<List<MovieModel>> getMovies([int page = 1]) async {
     try {
       final response = await _dio.get(
-        'https://api.themoviedb.org/3/movie/popular?api_key=${_environment.movieDbKey}&language=pt-BR&page=1',
+        'https://api.themoviedb.org/3/movie/popular?api_key=${_environment.movieDbKey}&language=pt-BR&page=$page',
       );
 
       final results = List<Map<String, dynamic>>.from(response.data['results']);
